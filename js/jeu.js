@@ -17,31 +17,93 @@ function getAnswer(){
   return answer;
 }
 
+// Affiche les résultats des différentes parties
+function showResults() {
+
+  // Parcourir le tableau JS des résultats
+  for (var index = 0; index < results.length; index++) {
+
+    // On récupère une ligne du tableau JS
+    var oneGame = results[ index ];
+    // oneGame.numberToFind
+    // oneGame.game
+
+    // On crée une chaine de caractères qui
+    // contient les balises HTML dont j'ai besoin
+    // pour afficher une ligne dans mon tableau HTML
+    var html = '<tr><td>' + oneGame.game + '</td><td>' + oneGame.win + '</td><td>' + oneGame.tentatives + '</td><td>' + oneGame.numberToFind + '</td></tr>';
+
+    // On affiche chaque ligne HTML contenant
+    // les données de la partie
+    document.getElementById('score').innerHTML += html;
+  }
+}
 
 var tentatives = 0;
 var alea = getAlea();
 // On vérifie si les deux chiffre concordent
 
-function startGame(){
+var gameNumber = 1;
+var results = []; // Contient l'ensemble des résultats
+var reply = true;
 
+while (reply) {
+
+  var tentatives = 0;
   var answer = getAnswer();
+  var alea = getAlea();
 
-  if(answer === alea){
-    alert('Bien joué, tu as trouvé le chiffre secret!')
+  while (alea != answer && tentatives < 2) {
+
+    // On comptabilise une nouvelle tentative
+    // tentatives = tentatives + 1;
+    // tentatives += 1;
+    tentatives++;
+
+    if (answer > alea) {
+
+      // Le nombre est trop grand
+      alert('Le nombre est trop grand');
+    }
+    else {
+
+      // Le nombre est trop petit
+      alert('Le nombre est trop petit');
+    }
+
+    if (tentatives < 2) {
+
+      answer = getAnswer();
+    }
   }
-  else if(answer > alea){
-    alert('Le nombre est trop grand!');
-    answer = Number(prompt('entrez un nombre entre 1 et 1000 svp'));
+
+  // On est sortie de la boucle
+  // Soit on a perdu (plus de 10 essais)
+  var win = false;
+
+  if (tentatives >= 2) {
+    alert('Tu as perdu');
   }
-  else{
-    alert('le chiffre est trop petit...');
-    answer = Number(prompt('entrez un nombre entre 1 et 1000 svp'));
+  // Soit on a trouvé (moins de 10 essais)
+  else {
+    alert('Tu as gagné');
+    win = true;
   }
+
+  // On enregistre le résultat
+  var resultat = {
+    game: gameNumber,
+    win: win,
+    tentatives: tentatives,
+    numberToFind: alea
+  };
+
+  results.push(resultat);
+
+  // On demande à l'utilisateur si il veut rejouer
+  reply = confirm('Voulez vous rejouer ?');
+  gameNumber++;
 }
 
-while(answer != alea && tentatives < 10){
-
-  tentatives++;
-  console.log(tentatives);
-
-}
+// On affiche les résultats
+showResults();
